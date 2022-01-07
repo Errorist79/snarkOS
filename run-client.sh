@@ -17,6 +17,7 @@ function exit_node()
 trap exit_node SIGINT
 
 echo "Running client node..."
+$COMMAND &
 
 while :
 do
@@ -25,13 +26,14 @@ do
   rm Cargo.lock
   STATUS=$(git pull)
 
-  echo "Running the node..."
+  echo "Running the client node..."
   
   if [ "$STATUS" != "Already up to date." ]; then
     cargo clean
-  fi
+    $COMMAND; kill -INT $!
+  else
+    echo "==============NO UPDATE NECESSARY, CONTINUING....================" fi
 
-  $COMMAND & sleep 1800; kill -INT $!
+  sleep 30
 
-  sleep 2;
 done
