@@ -34,7 +34,8 @@ do
     cargo clean
     $COMMAND; kill -INT $(cat /tmp/snarkos-client.pid)
   else
-    echo "==============NO UPDATE NECESSARY, CONTINUING....================" fi
+    echo "==============NO UPDATE NECESSARY, CONTINUING....================"
+  fi
 
   sleep 30
 
