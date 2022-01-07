@@ -10,27 +10,29 @@ done
 function exit_node()
 {
     echo "Exiting..."
-    kill $!
+    kill $(cat /tmp/snarkos-client.pid)
     exit
 }
 
 trap exit_node SIGINT
 
 echo "Running client node..."
-$COMMAND &
+$COMMAND & 
+echo $! > /tmp/snarkos-client.pid
 
 while :
 do
   echo "Checking for updates..."
   git stash
   rm Cargo.lock
-  STATUS=$(git pull)
 
-  echo "Running the client node..."
+
+  echo "Running the snarkos client node..."
   
+  STATUS=$(git pull)
   if [ "$STATUS" != "Already up to date." ]; then
     cargo clean
-    $COMMAND; kill -INT $!
+    $COMMAND; kill -INT $(cat /tmp/snarkos-client.pid)
   else
     echo "==============NO UPDATE NECESSARY, CONTINUING....================" fi
 
